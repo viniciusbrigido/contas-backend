@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountListDTO> getAccounts(AccountSearchDTO dto) {
+    public List<AccountListDTO> getAccounts(SearchAccountDTO dto) {
         return accountRepository.getAccounts(dto);
     }
 

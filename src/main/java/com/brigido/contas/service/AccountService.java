@@ -9,7 +9,7 @@ public interface AccountService {
     AccountDTO create(CreateAccountDTO dto);
     AccountDTO update(UpdateAccountDTO dto);
     AccountMovementDTO getAccountWithMovements(UUID id);
-    List<AccountListDTO> getAccounts(AccountSearchDTO dto);
+    List<AccountListDTO> getAccounts(SearchAccountDTO dto);
     void delete(UUID id);
     void updateValue(AccountEntity account);
     AccountEntity findById(UUID id);

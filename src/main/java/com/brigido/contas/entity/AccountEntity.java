@@ -48,11 +48,11 @@ public class AccountEntity {
     }
 
     public void deposit(BigDecimal value) {
-        this.value = value.add(value);
+        this.value = this.value.add(value);
     }
 
     public void remove(BigDecimal value) {
-        this.value = value.subtract(value);
+        this.value = this.value.subtract(value);
     }
 
     public void update(String accountNumber) {

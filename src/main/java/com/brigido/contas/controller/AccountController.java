@@ -30,7 +30,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public List<AccountListDTO> getAccounts(@RequestBody AccountSearchDTO dto) {
+    public List<AccountListDTO> getAccounts(@RequestBody SearchAccountDTO dto) {
         return accountService.getAccounts(dto);
     }
 

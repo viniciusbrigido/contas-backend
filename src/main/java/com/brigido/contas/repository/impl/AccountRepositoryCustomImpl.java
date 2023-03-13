@@ -1,6 +1,6 @@
 package com.brigido.contas.repository.impl;
 
-import com.brigido.contas.dto.account.AccountSearchDTO;
+import com.brigido.contas.dto.account.SearchAccountDTO;
 import com.brigido.contas.dto.account.AccountListDTO;
 import com.brigido.contas.repository.AccountRepositoryCustom;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
     private EntityManager em;
 
     @Override
-    public List<AccountListDTO> getAccounts(AccountSearchDTO dto) {
+    public List<AccountListDTO> getAccounts(SearchAccountDTO dto) {
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ")
            .append(" new com.brigido.contas.dto.account.AccountListDTO( ")
