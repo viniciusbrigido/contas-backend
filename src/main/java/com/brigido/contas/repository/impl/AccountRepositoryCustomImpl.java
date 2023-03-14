@@ -2,8 +2,12 @@ package com.brigido.contas.repository.impl;
 
 import com.brigido.contas.dto.account.SearchAccountDTO;
 import com.brigido.contas.dto.account.AccountListDTO;
+import com.brigido.contas.entity.AccountEntity;
+import com.brigido.contas.entity.PersonEntity;
+import com.brigido.contas.enumeration.AccountStatus;
 import com.brigido.contas.repository.AccountRepositoryCustom;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,27 +18,24 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
 
     @Override
     public List<AccountListDTO> getAccounts(SearchAccountDTO dto) {
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ")
-           .append(" new com.brigido.contas.dto.account.AccountListDTO( ")
-           .append("    a.id AS id, ")
-           .append("    a.accountNumber AS accountNumber, ")
-           .append("    a.value AS value, ")
-           .append("    p.name AS name, ")
-           .append("    p.cpf AS cpf ")
-           .append(" ) ")
-           .append(" FROM AccountEntity a ")
-           .append(" LEFT JOIN PersonEntity p ON (a.person.id = p.id) ")
-           .append(" WHERE a.status = 'OPEN' ");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<AccountListDTO> cq = cb.createQuery(AccountListDTO.class);
+        Root<AccountEntity> root = cq.from(AccountEntity.class);
+        Join<AccountEntity, PersonEntity> joinPerson = root.join("person", JoinType.LEFT);
 
+        cq.select(cb.construct(AccountListDTO.class,
+                root.get("id"),
+                root.get("accountNumber"),
+                root.get("value"),
+                joinPerson.get("name"),
+                joinPerson.get("cpf")));
+
+        cq.where(cb.equal(root.get("status"), AccountStatus.OPEN));
         if (Objects.nonNull(dto.getPersonId())) {
-            sql.append(" AND p.id = :personId ");
+            cq.where(cb.equal(joinPerson.get("id"), dto.getPersonId()));
         }
 
-        TypedQuery<AccountListDTO> query = em.createQuery(sql.toString(), AccountListDTO.class);
-        if (Objects.nonNull(dto.getPersonId())) {
-            query.setParameter("personId", dto.getPersonId());
-        }
+        TypedQuery<AccountListDTO> query = em.createQuery(cq);
         return query.getResultList();
     }
 }

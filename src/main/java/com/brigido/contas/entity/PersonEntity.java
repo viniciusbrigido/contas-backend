@@ -1,6 +1,5 @@
 package com.brigido.contas.entity;
 
-import com.brigido.contas.dto.person.UpdatePersonDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -21,14 +20,13 @@ public class PersonEntity {
 
     private String name;
     private String cpf;
-    private String address;
+    private String number;
+    private String complement;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<AccountEntity> accounts;
 
-    public void update(UpdatePersonDTO dto) {
-        name = dto.getName();
-        cpf = dto.getCpf();
-        address = dto.getAddress();
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
 }
