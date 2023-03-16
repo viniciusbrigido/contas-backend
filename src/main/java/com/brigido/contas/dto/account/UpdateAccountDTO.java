@@ -5,7 +5,6 @@ import java.util.UUID;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-@Builder
 public class UpdateAccountDTO {
     private UUID id;
     private String accountNumber;

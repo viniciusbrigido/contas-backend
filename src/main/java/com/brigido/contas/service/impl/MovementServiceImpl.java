@@ -1,16 +1,17 @@
 package com.brigido.contas.service.impl;
 
-import com.brigido.contas.dto.account.AccountDTO;
+import com.brigido.contas.dto.balance.BalanceDTO;
 import com.brigido.contas.dto.movement.*;
 import com.brigido.contas.entity.*;
 import com.brigido.contas.entity.MovementEntity;
 import com.brigido.contas.exception.InvalidBalanceException;
 import com.brigido.contas.repository.MovementRepository;
-import com.brigido.contas.service.AccountService;
-import com.brigido.contas.service.MovementService;
+import com.brigido.contas.service.*;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static java.util.Objects.*;
 
 @Service
 public class MovementServiceImpl implements MovementService {
@@ -19,34 +20,56 @@ public class MovementServiceImpl implements MovementService {
     private MovementRepository movementRepository;
 
     @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private BalanceService balanceService;
 
     @Autowired
     private ModelMapper modelMapper;
 
+    @Transactional
     @Override
-    public AccountDTO create(CreateMovementDTO dto) {
+    public BalanceDTO create(CreateMovementDTO dto) {
+        CurrencyEntity currency = currencyService.findById(dto.getCurrencyId());
         AccountEntity account = accountService.findById(dto.getAccountId());
-        accountMovement(account, dto);
-        accountService.updateValue(account);
 
+        BalanceEntity balance = balanceService.findOrReturnNew(currency, account);
+        fillBalance(balance, currency, account, dto);
+        fillMovement(balance, dto);
+
+        return modelMapper.map(balance, BalanceDTO.class);
+    }
+
+    private void fillBalance(BalanceEntity balance, CurrencyEntity currency, AccountEntity account, CreateMovementDTO dto) {
+        if (isNull(balance.getId())) {
+            balance.setCurrency(currency);
+            balance.setAccount(account);
+        }
+        balanceMovement(balance, dto);
+        balanceService.updateValue(balance);
+    }
+
+    private void fillMovement(BalanceEntity balance, CreateMovementDTO dto) {
         MovementEntity movement = new MovementEntity();
-        movement.setAccount(account);
+        movement.setBalance(balance);
         movement.setType(dto.getType());
         movement.setValue(dto.getValue());
         movementRepository.save(movement);
-
-        return modelMapper.map(account, AccountDTO.class);
+        balance.getMovements().add(movement);
     }
 
-    private void accountMovement(AccountEntity account, CreateMovementDTO dto) {
+    private void balanceMovement(BalanceEntity balance, CreateMovementDTO dto) {
         if (dto.isDeposit()) {
-            account.deposit(dto.getValue());
+            balance.deposit(dto.getValue());
             return;
         }
-        if (account.getValue().compareTo(dto.getValue()) < 0) {
+        if (balance.getValue().compareTo(dto.getValue()) < 0) {
             throw new InvalidBalanceException("Saldo Inválido.");
         }
-        account.remove(dto.getValue());
+        balance.remove(dto.getValue());
     }
 }

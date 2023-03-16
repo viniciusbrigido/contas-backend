@@ -59,16 +59,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(UUID id) {
         AccountEntity account = findById(id);
-        if (account.hasMovements()) {
-            account.close();
-            accountRepository.save(account);
-            return;
-        }
+        //TODO Fazer validacao ao deletar conta
         accountRepository.delete(account);
-    }
-
-    @Override
-    public void updateValue(AccountEntity account) {
-        accountRepository.save(account);
     }
 }

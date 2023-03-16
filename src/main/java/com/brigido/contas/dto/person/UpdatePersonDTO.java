@@ -4,11 +4,8 @@ import com.brigido.contas.dto.address.AddressDTO;
 import lombok.*;
 import java.util.UUID;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class UpdatePersonDTO {
     private UUID id;
     private String name;

@@ -1,6 +1,5 @@
 package com.brigido.contas.entity;
 
-import com.brigido.contas.enumeration.MovementType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -10,10 +9,10 @@ import java.util.UUID;
 @Getter @Setter
 @AllArgsConstructor
 @Entity
-@Table(name = "movement")
-public class MovementEntity {
+@Table(name = "currency")
+public class CurrencyEntity {
 
-    public MovementEntity() {
+    public CurrencyEntity() {
         date = LocalDateTime.now();
     }
 
@@ -22,14 +21,14 @@ public class MovementEntity {
     @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false, updatable = false)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "balance_id", nullable = false)
-    private BalanceEntity balance;
+    private String name;
 
-    private BigDecimal value;
-
-    @Enumerated(EnumType.STRING)
-    private MovementType type;
+    private BigDecimal price;
 
     private LocalDateTime date;
+
+    public void update(BigDecimal price) {
+        this.price = price;
+        date = LocalDateTime.now();
+    }
 }

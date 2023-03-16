@@ -5,10 +5,8 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-@EqualsAndHashCode(of = "id")
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "person")
 public class PersonEntity {

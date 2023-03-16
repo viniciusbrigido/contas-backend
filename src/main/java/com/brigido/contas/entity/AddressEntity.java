@@ -3,7 +3,6 @@ package com.brigido.contas.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@EqualsAndHashCode(of = "id")
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @Entity

@@ -6,9 +6,7 @@ import java.util.UUID;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-@Builder
 public class AccountDTO {
     private UUID id;
     private String accountNumber;
-    private BigDecimal value;
 }

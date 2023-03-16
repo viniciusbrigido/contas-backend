@@ -1,6 +1,5 @@
-package com.brigido.contas.dto.movement;
+package com.brigido.contas.dto.currency;
 
-import com.brigido.contas.enumeration.MovementType;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,10 +7,9 @@ import java.util.UUID;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-public class SimpleMovementDTO {
-
+public class CurrencyDTO {
     private UUID id;
-    private BigDecimal value;
-    private MovementType type;
+    private String name;
+    private BigDecimal price;
     private LocalDateTime date;
 }

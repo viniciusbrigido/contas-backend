@@ -11,6 +11,5 @@ public interface AccountService {
     AccountMovementDTO getAccountWithMovements(UUID id);
     List<AccountListDTO> getAccounts(SearchAccountDTO dto);
     void delete(UUID id);
-    void updateValue(AccountEntity account);
     AccountEntity findById(UUID id);
 }

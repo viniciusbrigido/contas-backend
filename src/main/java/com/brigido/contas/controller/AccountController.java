@@ -35,7 +35,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void c(@PathVariable UUID id) {
         accountService.delete(id);
     }
 }

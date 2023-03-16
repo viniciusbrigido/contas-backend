@@ -10,6 +10,7 @@ import java.util.UUID;
 @Builder
 public class CreateMovementDTO {
     private UUID accountId;
+    private UUID currencyId;
     private BigDecimal value;
     private MovementType type;
 
