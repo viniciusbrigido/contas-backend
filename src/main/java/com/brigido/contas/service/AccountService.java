@@ -10,6 +10,7 @@ public interface AccountService {
     AccountDTO update(UpdateAccountDTO dto);
     AccountMovementDTO getAccountWithMovements(UUID id);
     List<AccountListDTO> getAccounts(SearchAccountDTO dto);
-    void delete(UUID id);
     AccountEntity findById(UUID id);
+    void delete(UUID id);
+    void close(UUID id);
 }

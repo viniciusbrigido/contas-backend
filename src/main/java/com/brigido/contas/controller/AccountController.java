@@ -35,7 +35,12 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public void c(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) {
         accountService.delete(id);
+    }
+
+    @PutMapping("/close/{id}")
+    public void close(@PathVariable UUID id) {
+        accountService.close(id);
     }
 }

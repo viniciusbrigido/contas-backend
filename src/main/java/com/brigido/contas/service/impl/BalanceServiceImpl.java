@@ -54,14 +54,15 @@ public class BalanceServiceImpl implements BalanceService {
         List<ListBalanceDTO> balancesDTO = new ArrayList<>();
         AccountEntity account = accountService.findById(accountId);
 
-        balanceRepository.findByAccount(account).forEach(balance -> {
-            balancesDTO.add(ListBalanceDTO.builder()
-                            .name(balance.getCurrency().getName())
-                            .value(balance.getValue())
-                            .movements(getMovementsDto(balance.getMovements()))
-                            .build()
-            );
-        });
+        for (BalanceEntity balance : balanceRepository.findByAccount(account)) {
+            ListBalanceDTO balanceDTO = ListBalanceDTO.builder()
+                    .name(balance.getCurrency().getName())
+                    .value(balance.getValue())
+                    .movements(getMovementsDto(balance.getMovements()))
+                    .build();
+
+            balancesDTO.add(balanceDTO);
+        }
         return balancesDTO;
     }
 

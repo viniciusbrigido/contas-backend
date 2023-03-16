@@ -3,7 +3,9 @@ package com.brigido.contas.entity;
 import com.brigido.contas.enumeration.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import java.math.BigDecimal;
 import java.util.*;
+import static java.math.BigDecimal.*;
 import static java.util.Objects.*;
 
 @Getter @Setter
@@ -43,5 +45,19 @@ public class AccountEntity {
 
     public void update(String accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    public BigDecimal getTotalBalances() {
+        return balances.stream()
+                .map(BalanceEntity::getValue)
+                .reduce(ZERO, BigDecimal::add);
+    }
+
+    public boolean isAccountCloseable() {
+        return getBalances().isEmpty() || getTotalBalances().equals(ZERO);
+    }
+
+    public void close() {
+        status = AccountStatus.CLOSED;
     }
 }

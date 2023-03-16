@@ -2,7 +2,7 @@ package com.brigido.contas.service.impl;
 
 import com.brigido.contas.dto.account.*;
 import com.brigido.contas.entity.AccountEntity;
-import com.brigido.contas.exception.EntityNotFound;
+import com.brigido.contas.exception.*;
 import com.brigido.contas.repository.AccountRepository;
 import com.brigido.contas.service.AccountService;
 import com.brigido.contas.service.PersonService;
@@ -59,7 +59,20 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(UUID id) {
         AccountEntity account = findById(id);
-        //TODO Fazer validacao ao deletar conta
-        accountRepository.delete(account);
+        if (account.getBalances().isEmpty()) {
+            accountRepository.delete(account);
+            return;
+        }
+        throw new DeleteNotAllowed("Não é possivel excluir a conta pois há movimentações.");
+    }
+
+    @Override
+    public void close(UUID id) {
+        AccountEntity account = findById(id);
+        if (account.isAccountCloseable()) {
+            account.close();
+            accountRepository.save(account);
+        }
+        throw new CloseNotAlowed("Não é possivel fechar a conta pois ela não está zerada.");
     }
 }
