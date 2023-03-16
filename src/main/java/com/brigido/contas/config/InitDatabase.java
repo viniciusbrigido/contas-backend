@@ -44,11 +44,10 @@ public class InitDatabase {
 
     private void fillCurrency() {
         List<CurrencyResponseDTO.Currency> currenciesRest = currencyRest.getCurrenciesBase();
-        List<CurrencyEntity> entities = currenciesRest.stream()
-                .map(this::currencyDtoToEntity)
-                .collect(Collectors.toList());
-
+        List<CurrencyEntity> entities = new ArrayList<>();
         entities.add(getReal());
+        entities.addAll(getCurrenciesRest());
+
         currencyService.create(entities);
     }
 
@@ -57,6 +56,13 @@ public class InitDatabase {
         currency.setName("Real Brasileiro");
         currency.setPrice(BigDecimal.ONE);
         return currency;
+    }
+
+    private List<CurrencyEntity> getCurrenciesRest() {
+        List<CurrencyResponseDTO.Currency> currenciesRest = currencyRest.getCurrenciesBase();
+        return currenciesRest.stream()
+                .map(this::currencyDtoToEntity)
+                .collect(Collectors.toList());
     }
 
     private CurrencyEntity currencyDtoToEntity(CurrencyResponseDTO.Currency currency) {

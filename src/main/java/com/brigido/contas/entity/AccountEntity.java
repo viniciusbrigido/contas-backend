@@ -54,7 +54,7 @@ public class AccountEntity {
     }
 
     public boolean isAccountCloseable() {
-        return getBalances().isEmpty() || getTotalBalances().equals(ZERO);
+        return getBalances().isEmpty() || getTotalBalances().compareTo(ZERO) == 0;
     }
 
     public void close() {

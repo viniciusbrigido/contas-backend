@@ -72,6 +72,7 @@ public class AccountServiceImpl implements AccountService {
         if (account.isAccountCloseable()) {
             account.close();
             accountRepository.save(account);
+            return;
         }
         throw new CloseNotAlowed("Não é possivel fechar a conta pois ela não está zerada.");
     }
