@@ -1,6 +1,7 @@
 package com.brigido.contas.service.impl;
 
 import com.brigido.contas.dto.balance.*;
+import com.brigido.contas.dto.movement.SimpleMovementDTO;
 import com.brigido.contas.entity.*;
 import com.brigido.contas.repository.BalanceRepository;
 import com.brigido.contas.service.*;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BalanceServiceImpl implements BalanceService {
@@ -56,10 +58,17 @@ public class BalanceServiceImpl implements BalanceService {
             balancesDTO.add(ListBalanceDTO.builder()
                             .name(balance.getCurrency().getName())
                             .value(balance.getValue())
+                            .movements(getMovementsDto(balance.getMovements()))
                             .build()
             );
         });
         return balancesDTO;
+    }
+
+    private List<SimpleMovementDTO> getMovementsDto(List<MovementEntity> movements) {
+        return movements.stream()
+                .map(movement -> modelMapper.map(movement, SimpleMovementDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
