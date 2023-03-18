@@ -22,8 +22,8 @@ public class MovementEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "balance_id", nullable = false)
-    private BalanceEntity balance;
+    @JoinColumn(name = "account_id", nullable = false)
+    private AccountEntity account;
 
     private BigDecimal value;
 

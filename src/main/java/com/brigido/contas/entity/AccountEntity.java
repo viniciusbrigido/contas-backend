@@ -16,6 +16,7 @@ public class AccountEntity {
 
     public AccountEntity() {
         status = AccountStatus.OPEN;
+        value = ZERO;
     }
 
     @Id
@@ -30,16 +31,18 @@ public class AccountEntity {
     private String accountNumber;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<BalanceEntity> balances;
+    private List<MovementEntity> movements;
 
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    public List<BalanceEntity> getBalances() {
-        if (isNull(balances)) {
-            balances = new ArrayList<>();
+    private BigDecimal value;
+
+    public List<MovementEntity> getBalances() {
+        if (isNull(movements)) {
+            movements = new ArrayList<>();
         }
-        return balances;
+        return movements;
     }
 
     public void update(String accountNumber) {
@@ -47,8 +50,8 @@ public class AccountEntity {
     }
 
     public BigDecimal getTotalBalances() {
-        return balances.stream()
-                .map(BalanceEntity::getValue)
+        return movements.stream()
+                .map(MovementEntity::getValue)
                 .reduce(ZERO, BigDecimal::add);
     }
 
@@ -62,5 +65,13 @@ public class AccountEntity {
 
     public boolean hasMovements() {
         return !getBalances().isEmpty();
+    }
+
+    public void deposit(BigDecimal value) {
+        this.value = this.value.add(value);
+    }
+
+    public void remove(BigDecimal value) {
+        this.value = this.value.subtract(value);
     }
 }

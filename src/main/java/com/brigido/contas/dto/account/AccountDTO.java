@@ -9,4 +9,5 @@ import java.util.UUID;
 public class AccountDTO {
     private UUID id;
     private String accountNumber;
+    private BigDecimal value;
 }

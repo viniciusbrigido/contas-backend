@@ -26,6 +26,7 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
         cq.select(cb.construct(AccountListDTO.class,
                 root.get("id"),
                 root.get("accountNumber"),
+                root.get("value"),
                 joinPerson.get("name"),
                 joinPerson.get("cpf")));
 

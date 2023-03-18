@@ -1,6 +1,6 @@
 package com.brigido.contas.dto.account;
 
-import com.brigido.contas.dto.balance.SimpleBalanceDTO;
+import com.brigido.contas.dto.movement.SimpleMovementDTO;
 import lombok.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,5 +11,6 @@ import java.util.UUID;
 public class SimpleAccountDTO {
     private UUID id;
     private String accountNumber;
-    private List<SimpleBalanceDTO> balances;
+    private List<SimpleMovementDTO> movements;
+    private BigDecimal value;
 }

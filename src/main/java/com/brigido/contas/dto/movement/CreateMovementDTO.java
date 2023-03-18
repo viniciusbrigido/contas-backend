@@ -11,7 +11,6 @@ import static com.brigido.contas.enumeration.MovementType.*;
 @Builder
 public class CreateMovementDTO {
     private UUID accountId;
-    private UUID currencyId;
     private BigDecimal value;
     private MovementType type;
     private UUID accountTransferenceId;
