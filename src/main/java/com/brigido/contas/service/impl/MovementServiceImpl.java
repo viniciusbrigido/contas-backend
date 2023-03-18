@@ -37,33 +37,38 @@ public class MovementServiceImpl implements MovementService {
         CurrencyEntity currency = currencyService.findById(dto.getCurrencyId());
         AccountEntity account = accountService.findById(dto.getAccountId());
 
-        BalanceEntity balance = balanceService.findOrReturnNew(currency, account);
-        fillBalance(balance, currency, account, dto);
-        fillMovement(balance, dto);
+        BalanceEntity balance = createBalance(currency, account, dto, false);
 
         return modelMapper.map(balance, BalanceDTO.class);
     }
 
-    private void fillBalance(BalanceEntity balance, CurrencyEntity currency, AccountEntity account, CreateMovementDTO dto) {
+    private BalanceEntity createBalance(CurrencyEntity currency, AccountEntity account, CreateMovementDTO dto, boolean isTransfer) {
+        BalanceEntity balance = balanceService.findOrReturnNew(currency, account);
+        fillBalance(balance, currency, account, dto, isTransfer);
+        fillMovement(balance, dto, isTransfer);
+        return balance;
+    }
+
+    private void fillBalance(BalanceEntity balance, CurrencyEntity currency, AccountEntity account, CreateMovementDTO dto, boolean isTransfer) {
         if (isNull(balance.getId())) {
             balance.setCurrency(currency);
             balance.setAccount(account);
         }
-        balanceMovement(balance, dto);
+        balanceMovement(balance, dto, isTransfer);
         balanceService.updateValue(balance);
     }
 
-    private void fillMovement(BalanceEntity balance, CreateMovementDTO dto) {
+    private void fillMovement(BalanceEntity balance, CreateMovementDTO dto, boolean isTransfer) {
         MovementEntity movement = new MovementEntity();
         movement.setBalance(balance);
-        movement.setType(dto.getType());
+        movement.setType(dto.getType(isTransfer));
         movement.setValue(dto.getValue());
         movementRepository.save(movement);
         balance.getMovements().add(movement);
     }
 
-    private void balanceMovement(BalanceEntity balance, CreateMovementDTO dto) {
-        if (dto.isDeposit()) {
+    private void balanceMovement(BalanceEntity balance, CreateMovementDTO dto, boolean isTransfer) {
+        if (dto.isDeposit() || isTransfer) {
             balance.deposit(dto.getValue());
             return;
         }
@@ -71,5 +76,14 @@ public class MovementServiceImpl implements MovementService {
             throw new InvalidBalanceException("Saldo Inválido.");
         }
         balance.remove(dto.getValue());
+        if (dto.isTransference()) {
+            transfer(dto);
+        }
+    }
+
+    private void transfer(CreateMovementDTO dto) {
+        CurrencyEntity currency = currencyService.findById(dto.getCurrencyId());
+        AccountEntity accountTransference = accountService.findById(dto.getAccountTransferenceId());
+        createBalance(currency, accountTransference, dto, true);
     }
 }

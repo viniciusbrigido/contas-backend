@@ -73,7 +73,8 @@ public class InitDatabase {
 
     private void fillPerson() {
         PersonDTO person = personService.create(getPerson());
-        AccountDTO account = accountService.create(getAccount(person.getId()));
+        AccountDTO account = accountService.create(getAccount1(person.getId()));
+        accountService.create(getAccount2(person.getId()));
 
         CurrencyEntity currency = currencyService.findByName("Real Brasileiro");
         fillMovement(account.getId(), currency.getId());
@@ -99,10 +100,17 @@ public class InitDatabase {
                 .build();
     }
 
-    private CreateAccountDTO getAccount(UUID personId) {
+    private CreateAccountDTO getAccount1(UUID personId) {
         return CreateAccountDTO.builder()
                 .personId(personId)
                 .accountNumber("123")
+                .build();
+    }
+
+    private CreateAccountDTO getAccount2(UUID personId) {
+        return CreateAccountDTO.builder()
+                .personId(personId)
+                .accountNumber("456")
                 .build();
     }
 
