@@ -1,8 +1,8 @@
 package com.brigido.contas.service.impl;
 
 import com.brigido.contas.dto.person.*;
-import com.brigido.contas.entity.AddressEntity;
-import com.brigido.contas.entity.PersonEntity;
+import com.brigido.contas.entity.*;
+import com.brigido.contas.exception.DeleteNotAllowed;
 import com.brigido.contas.exception.EntityNotFound;
 import com.brigido.contas.repository.PersonRepository;
 import com.brigido.contas.service.AddressService;
@@ -67,6 +67,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void delete(UUID id) {
-        personRepository.deleteById(id);
+        PersonEntity person = findById(id);
+        if (!person.hasMovements()) {
+            personRepository.delete(person);
+            return;
+        }
+        throw new DeleteNotAllowed("Não é possivel excluir a pessoa pois há movimentações em suas contas.");
     }
 }

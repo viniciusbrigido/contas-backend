@@ -19,8 +19,7 @@ public class AccountEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false, updatable = false)
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne
@@ -59,5 +58,9 @@ public class AccountEntity {
 
     public void close() {
         status = AccountStatus.CLOSED;
+    }
+
+    public boolean hasMovements() {
+        return !getBalances().isEmpty();
     }
 }

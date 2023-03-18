@@ -17,10 +17,10 @@ public class CurrencyEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false, updatable = false)
+    @GeneratedValue
     private UUID id;
 
+    @Column(unique = true)
     private String name;
 
     private BigDecimal price;

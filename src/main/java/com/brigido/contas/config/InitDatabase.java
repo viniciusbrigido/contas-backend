@@ -43,7 +43,6 @@ public class InitDatabase {
     }
 
     private void fillCurrency() {
-        List<CurrencyResponseDTO.Currency> currenciesRest = currencyRest.getCurrenciesBase();
         List<CurrencyEntity> entities = new ArrayList<>();
         entities.add(getReal());
         entities.addAll(getCurrenciesRest());

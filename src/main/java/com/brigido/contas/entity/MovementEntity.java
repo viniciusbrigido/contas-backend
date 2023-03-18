@@ -18,8 +18,7 @@ public class MovementEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false, updatable = false)
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne
